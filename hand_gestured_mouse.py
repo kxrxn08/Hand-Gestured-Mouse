@@ -19,9 +19,15 @@ def r_clk_delay():
     time.sleep(0.5)
     r_delay=0
     r_clk_thread=threading.Thread(target=r_clk_delay)
+def d_clk_delay():
+    global d_delay,d_clk_thread
+    time.sleep(0.5)
+    d_delay=0
+    d_clk_thread=threading.Thread(target=d_clk_delay)
 r_delay=0
 r_clk_thread=threading.Thread(target=r_clk_delay)
-
+d_delay=0
+d_clk_thread=threading.Thread(target=d_clk_delay)
 matplotlib.use('TkAgg')
 
 detector=HD.HandDetector(detectionCon=0.9,maxHands=2)
@@ -44,13 +50,16 @@ while True:
         lmlist=hands[0]['lmList']
         ind_x,ind_y=lmlist[8][0], lmlist[8][1]
         mid_x,mid_y=lmlist[12][0], lmlist[12][1]
+        thumb_x,thumb_y=lmlist[4][0],lmlist[4][1]
         cv2.circle(img, (ind_x, ind_y), 5, (0, 255, 255), 2)
+        cv2.circle(img, (thumb_x, thumb_y), 5, (0, 255, 255), 2)    
+
         fingers=detector.fingersUp(hands[0])
 
 
         if fingers[1] == 1 and fingers[2] == 0 and fingers[0] == 1:
-            conv_x = int(np.interp(ind_x, (frameR, cam_w - frameR), (0, 1366)))
-            conv_y = int(np.interp(ind_y, (frameR, cam_h - frameR), (0, 768)))
+            conv_x = int(np.interp(ind_x, (frameR, cam_h - frameR), (0, 1366)))
+            conv_y = int(np.interp(ind_y, (frameR, cam_w - frameR), (0, 768)))
             mouse.move(conv_x, conv_y)
 
 
@@ -60,7 +69,6 @@ while True:
 
                 if fingers[4]==0 and l_delay==0:
                     pyautogui.click(button="left")
-                    # mouse.click("left")
                     l_delay=1
                     l_clk_thread.start()
         
@@ -81,9 +89,12 @@ while True:
             if abs(ind_x-mid_x)<25:
                 pyautogui.scroll(2)
             
-        if fingers[1]==1 and fingers[2]==1 and fingers[3]==1 and fingers[4]==0 and fingers[0]==1:
-            if (abs(ind_x-mid_x)<25):
-                pyautogui.doubleClick()
+        if fingers[1]==1 and fingers[0]==0:
+            if d_delay==0:
+                pyautogui.doubleClick(button="left")
+                # time.sleep(1)
+                d_delay=1
+                d_clk_thread.start()
 
     if not success:
         break   
@@ -97,4 +108,4 @@ while True:
 
 # Release the video capture object and destroy the window
 cap.release()
-cv2.destroyAllWindows() 
+cv2.destroyAllWindows()
