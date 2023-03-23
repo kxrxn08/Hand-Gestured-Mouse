@@ -53,9 +53,7 @@ while True:
         thumb_x,thumb_y=lmlist[4][0],lmlist[4][1]
         cv2.circle(img, (ind_x, ind_y), 5, (0, 255, 255), 2)
         cv2.circle(img, (thumb_x, thumb_y), 5, (0, 255, 255), 2)    
-
         fingers=detector.fingersUp(hands[0])
-
 
         if fingers[1] == 1 and fingers[2] == 0 and fingers[0] == 1:
             conv_x = int(np.interp(ind_x, (frameR, cam_h - frameR), (0, 1366)))
@@ -63,7 +61,7 @@ while True:
             mouse.move(conv_x, conv_y)
 
 
-        if fingers[1] == 1 and fingers[2] == 1 and fingers[0] == 1:
+        if fingers[1] == 1 and fingers[2] == 1 and fingers[0] == 1 and fingers[3]==0:
 
             if abs(ind_x-mid_x) < 25:
 
@@ -79,33 +77,39 @@ while True:
 
 
         if fingers[1]==1 and fingers[2]==1 and fingers[0]==0 and fingers[4]==0:
-
             if abs(ind_x-mid_x)<25:
-                pyautogui.scroll(-2)
+                pyautogui.scroll(-1)
 
 
         if fingers[1]==1 and fingers[2]==1 and fingers[0]==0 and fingers[4]==1:
-
             if abs(ind_x-mid_x)<25:
-                pyautogui.scroll(2)
+                pyautogui.scroll(1)
+
+
+        if fingers[1]==1 and fingers[2]==1 and fingers[3]==1:
+            if abs(ind_x-mid_x)<15:
+                pyautogui.mouseDown()
+                conv_x = int(np.interp(ind_x, (frameR, cam_h - frameR), (0, 1366)))
+                conv_y = int(np.interp(ind_y, (frameR, cam_w - frameR), (0, 768)))
+                mouse.move(conv_x, conv_y)
+        
             
         if fingers[1]==1 and fingers[0]==0:
             if d_delay==0:
                 pyautogui.doubleClick(button="left")
-                # time.sleep(1)
+
                 d_delay=1
                 d_clk_thread.start()
-
     if not success:
         break   
 
-    # Show the frame in a window named "video"
-    cv2.imshow("video", img)
+
+    cv2.imshow("live-feed", img)
 
 
     if cv2.waitKey(1) == ord('q'):
         break
 
-# Release the video capture object and destroy the window
+
 cap.release()
 cv2.destroyAllWindows()
