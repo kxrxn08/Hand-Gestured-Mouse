@@ -15,7 +15,7 @@
     The Hand-Gestured Mouse is implemented using Python and leverages libraries such as OpenCV and PyAutoGUI. OpenCV is used for real-time hand detection and tracking, while PyAutoGUI provides the necessary functions for simulating mouse inputs. The system captures video input from a webcam, processes it to detect hand gestures, and then maps those gestures to corresponding mouse actions.
 </p>
 <h3><a href='https://www.canva.com/design/DAFeA5v1JZQ/4U-8om1PHIZBIlWmLOhcUQ/edit?utm_content=DAFeA5v1JZQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'>LINK to the presentation I created for submission</a></h3>
-<h2>Features and Functionality</h2>
+<h2>Features and Functionalities</h2>
 
 <h3>Hand Gesture Recognition</h3>
 
